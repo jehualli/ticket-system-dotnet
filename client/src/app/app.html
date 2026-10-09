@@ -1,0 +1,10 @@
+<header>
+  <a routerLink="/tickets" class="brand">Ticket System</a>
+  @if (auth.user(); as user) {
+    <span class="who">{{ user.name }} · {{ label(user.role) }}</span>
+    <button class="link" (click)="logout()">Sign out</button>
+  }
+</header>
+<main>
+  <router-outlet />
+</main>

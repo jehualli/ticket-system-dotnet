@@ -1,0 +1,45 @@
+# docker compose up --build
+#   App:      http://localhost:8080
+#   Swagger:  http://localhost:8080/swagger
+#   SQL:      localhost,1433  (sa / Your_strong_Passw0rd)
+
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    # SQL Server has no ARM build; on Apple Silicon Docker Desktop runs it under emulation.
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: Your_strong_Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Your_strong_Passw0rd -Q 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  api:
+    build: ./src/TicketSystem.Api
+    depends_on:
+      sql:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Default: Server=sql,1433;Database=TicketSystem;User Id=sa;Password=Your_strong_Passw0rd;TrustServerCertificate=True
+      Jwt__Key: ${JWT_KEY:-local-docker-key-change-me-0123456789}
+      Database__MigrateOnStartup: "true"
+    ports:
+      - "5080:8080"
+
+  web:
+    build: ./client
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+volumes:
+  sqldata:

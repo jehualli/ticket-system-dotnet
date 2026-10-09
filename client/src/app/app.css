@@ -1,0 +1,26 @@
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.who {
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+main {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}

@@ -1,0 +1,14 @@
+bin/
+obj/
+.tools/
+*.user
+.vs/
+.idea/
+TestResults/
+
+client/node_modules/
+client/dist/
+client/.angular/
+
+.DS_Store
+.env
